@@ -1,11 +1,10 @@
-import { router } from '@kit.ArkUI';
-
 @Entry
 @Component
 struct Index {
   @State scale1: number = 1
   @State scale2: number = 1
   @State opacity1: number = 1
+  pathStack: NavPathStack = new NavPathStack()
 
   aboutToAppear() {
     let scaleDirection = 1;
@@ -27,6 +26,7 @@ struct Index {
   }
 
   build() {
+    Navigation(this.pathStack){
     Flex({ direction: FlexDirection.Row, alignItems: ItemAlign.Center , justifyContent:FlexAlign.Center}){
       Column() {
         Text('IP Radio')
@@ -41,9 +41,7 @@ struct Index {
 
         Button('See Stations')
           .onClick(()=>{
-            router.pushUrl({
-              url:'pages/StationsListPage'
-            })
+            this.pathStack.pushPathByName('StationsListPage', null)
           })
         .height(50)
         .backgroundColor(Color.Transparent)
@@ -55,6 +53,11 @@ struct Index {
     .height('100%')
     .width('100%')
     .scale({ x: this.scale1 }).opacity(this.opacity1).height('100%').width('100%')
+    }
+    .hideTitleBar(true)
+    .hideBackButton(true)
+    .hideToolBar(true)
+    .mode(NavigationMode.Stack)
   }
 
   pageTransition() {

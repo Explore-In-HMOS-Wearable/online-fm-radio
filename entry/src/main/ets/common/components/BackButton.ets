@@ -1,9 +1,8 @@
-import { router } from '@kit.ArkUI'
-
 
 @Component
 export default struct BackButton {
   @Prop url:string
+  @Link pathStack: NavPathStack
   build() {
     Row() {
       Image($r('app.media.Chevron_Left'))
@@ -17,7 +16,12 @@ export default struct BackButton {
     .alignItems(VerticalAlign.Bottom)
     .justifyContent(FlexAlign.Center)
     .onClick(() => {
-      router.pushUrl({ url: this.url })
+      if(this.url){
+        this.pathStack.pushPath({ name: this.url })
+      }
+      else{
+        this.pathStack.pop()
+      }
     })
   }
 }

@@ -1,0 +1,20 @@
+{
+  "routerMap": [
+    {
+      "name": "PlayerPage",
+      "pageSourceFile": "src/main/ets/pages/PlayerPage.ets",
+      "buildFunction": "PlayerPageBuilder",
+      "data": {
+        "description": "this is the player page"
+      }
+    },
+    {
+      "name": "StationsListPage",
+      "pageSourceFile": "src/main/ets/pages/StationsListPage.ets",
+      "buildFunction": "StationsListPageBuilder",
+      "data": {
+        "description": "this is the player page"
+      }
+    }
+  ]
+}

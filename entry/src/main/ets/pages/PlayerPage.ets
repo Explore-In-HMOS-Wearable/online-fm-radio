@@ -1,6 +1,5 @@
 import StationModel from '../model/StationModel'
 import StationViewModel from '../viewmodel/StationViewModel'
-import { router } from '@kit.ArkUI'
 import BackButton from '../common/components/BackButton'
 import { ActionIcon } from '../common/components/ActionIcon'
 import { AudioService } from '../services/AudioService'
@@ -18,25 +17,26 @@ media.createAVPlayer((error: BusinessError, video: media.AVPlayer) => {
   }
 });
 
-@Entry
+
+@Builder
+export function PlayerPageBuilder() {
+  PlayerPage()
+}
 @Component
-struct PlayerPage {
+export struct PlayerPage {
   private stationVM: StationViewModel = new StationViewModel()
   @State station: StationModel = new StationModel(0, '', '')
   @State isPlaying: boolean = false
   @State volume: number = 0;
+  @State pathStack: NavPathStack = new NavPathStack()
+
+  async newFunction(param: number){
+    await AudioService.setStationById(param)
+    this.isPlaying = AudioService.getPlayingState()
+  }
 
   async aboutToAppear() {
     avPlayer.setVolume(this.volume);
-    let stationIdSTR:string='stationId'
-    let params: object = router.getParams()
-    const stationId = Number(params[stationIdSTR])
-    let foundStation = this.stationVM.getStationById(stationId)
-    if (foundStation) {
-      this.station = foundStation
-      await AudioService.setStationById(stationId)
-      this.isPlaying = AudioService.getPlayingState()
-    }
   }
 
   async togglePlay() {
@@ -71,39 +71,66 @@ struct PlayerPage {
   }
 
   build() {
-    Column() {
-      BackButton({ url: 'pages/StationsListPage' })
-      Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Start }) {
-        Text(this.station.name)
-          .fontSize(18)
-          .fontWeight(FontWeight.Bold)
-          .padding(10)
+    NavDestination(){
+      Column() {
+        BackButton({
+          url: 'pages/StationsListPage',
+          pathStack: this.pathStack
+        })
 
-        Column() {
-          Flex({ direction: FlexDirection.Row, alignItems: ItemAlign.Center, justifyContent: FlexAlign.SpaceEvenly }) {
-            ActionIcon({ icon: $r('app.media.rewind') }).onClick(() => this.playPrev())
-            ActionIcon({ icon: this.isPlaying ? $r('app.media.paues') : $r('app.media.play') }).onClick(() => this.togglePlay())
-            ActionIcon({ icon: $r('app.media.rewind') }).rotate({ angle: 180 }).onClick(() => this.playNext())
-          }
-          .width('80%')
-          .margin({ bottom: 30, top: 40 })
+        Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Start }) {
+          Text(this.station.name)
+            .fontSize(18)
+            .fontWeight(FontWeight.Bold)
+            .padding(10)
 
-          Flex({ direction: FlexDirection.Row, alignItems: ItemAlign.Center, justifyContent: FlexAlign.SpaceEvenly }) {
-            ActionIcon({ icon: $r('app.media.volume_minus') }).onClick(()=>{
-              this.decreaseVol()
-            })
-            ActionIcon({ icon: $r('app.media.volume_plus') }).onClick(()=>{
-              this.increaseVol()
-            })
+          Column() {
+            Flex({ direction: FlexDirection.Row, alignItems: ItemAlign.Center, justifyContent: FlexAlign.SpaceEvenly }) {
+              ActionIcon({ icon: $r('app.media.rewind') }).onClick(() => this.playPrev())
+              ActionIcon({ icon: this.isPlaying ? $r('app.media.paues') : $r('app.media.play') }).onClick(() => this.togglePlay())
+              ActionIcon({ icon: $r('app.media.rewind') }).rotate({ angle: 180 }).onClick(() => this.playNext())
+            }
+            .width('80%')
+            .margin({ bottom: 30, top: 40 })
+
+            Flex({ direction: FlexDirection.Row, alignItems: ItemAlign.Center, justifyContent: FlexAlign.SpaceEvenly }) {
+              ActionIcon({ icon: $r('app.media.volume_minus') }).onClick(()=>{
+                this.decreaseVol()
+              })
+              ActionIcon({ icon: $r('app.media.volume_plus') }).onClick(()=>{
+                this.increaseVol()
+              })
+            }
+            .width('80%')
           }
-          .width('80%')
         }
+        .padding({ top: 10 })
       }
-      .padding({ top: 10 })
-    }
-    .alignItems(HorizontalAlign.Center)
-    .justifyContent(FlexAlign.SpaceBetween)
-    .height('100%')
-    .width('100%')
+      .alignItems(HorizontalAlign.Center)
+      .justifyContent(FlexAlign.SpaceBetween)
+      .height('100%')
+      .width('100%')
+    }.onReady((context: NavDestinationContext) => {
+      this.pathStack = context.pathStack
+
+      const ids: number[] | undefined = this.pathStack.getIndexByName('PlayerPage');
+
+      if (Array.isArray(ids) && ids.length > 0) {
+        const idx = ids[ids.length - 1];
+
+        let stationId = this.pathStack.getParamByIndex(idx) as number;
+        if (stationId) {
+          const foundStation = this.stationVM.getStationById(stationId);
+          if (foundStation) {
+            this.station = foundStation
+            this.newFunction(stationId)
+          }
+        }
+      } else {
+        console.warn('No index found for MailContent in NavPathStack');
+      }
+
+
+    }).hideBackButton(true)
   }
 }
