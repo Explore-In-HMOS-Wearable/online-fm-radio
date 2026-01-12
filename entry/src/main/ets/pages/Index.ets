@@ -1,9 +1,9 @@
 @Entry
 @Component
 struct Index {
-  @State scale1: number = 1
-  @State scale2: number = 1
-  @State opacity1: number = 1
+  private scale1: number = 1
+  private scale2: number = 1
+  private opacity1: number = 1
   pathStack: NavPathStack = new NavPathStack()
 
   aboutToAppear() {

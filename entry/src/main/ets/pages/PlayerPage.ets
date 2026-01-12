@@ -22,6 +22,7 @@ media.createAVPlayer((error: BusinessError, video: media.AVPlayer) => {
 export function PlayerPageBuilder() {
   PlayerPage()
 }
+
 @Component
 export struct PlayerPage {
   private stationVM: StationViewModel = new StationViewModel()
@@ -30,7 +31,7 @@ export struct PlayerPage {
   @State volume: number = 0;
   @State pathStack: NavPathStack = new NavPathStack()
 
-  async newFunction(param: number){
+  async newFunction(param: number) {
     await AudioService.setStationById(param)
     this.isPlaying = AudioService.getPlayingState()
   }
@@ -71,7 +72,7 @@ export struct PlayerPage {
   }
 
   build() {
-    NavDestination(){
+    NavDestination() {
       Column() {
         BackButton({
           url: 'pages/StationsListPage',
@@ -85,19 +86,28 @@ export struct PlayerPage {
             .padding(10)
 
           Column() {
-            Flex({ direction: FlexDirection.Row, alignItems: ItemAlign.Center, justifyContent: FlexAlign.SpaceEvenly }) {
+            Flex({
+              direction: FlexDirection.Row,
+              alignItems: ItemAlign.Center,
+              justifyContent: FlexAlign.SpaceEvenly
+            }) {
               ActionIcon({ icon: $r('app.media.rewind') }).onClick(() => this.playPrev())
-              ActionIcon({ icon: this.isPlaying ? $r('app.media.paues') : $r('app.media.play') }).onClick(() => this.togglePlay())
+              ActionIcon({ icon: this.isPlaying ? $r('app.media.paues') : $r('app.media.play') })
+                .onClick(() => this.togglePlay())
               ActionIcon({ icon: $r('app.media.rewind') }).rotate({ angle: 180 }).onClick(() => this.playNext())
             }
             .width('80%')
             .margin({ bottom: 30, top: 40 })
 
-            Flex({ direction: FlexDirection.Row, alignItems: ItemAlign.Center, justifyContent: FlexAlign.SpaceEvenly }) {
-              ActionIcon({ icon: $r('app.media.volume_minus') }).onClick(()=>{
+            Flex({
+              direction: FlexDirection.Row,
+              alignItems: ItemAlign.Center,
+              justifyContent: FlexAlign.SpaceEvenly
+            }) {
+              ActionIcon({ icon: $r('app.media.volume_minus') }).onClick(() => {
                 this.decreaseVol()
               })
-              ActionIcon({ icon: $r('app.media.volume_plus') }).onClick(()=>{
+              ActionIcon({ icon: $r('app.media.volume_plus') }).onClick(() => {
                 this.increaseVol()
               })
             }

@@ -1,6 +1,6 @@
 {
   "app": {
-    "bundleName": "com.hmosdemos.onlinefmradio",
+    "bundleName": "com.hmosdemos.wearable.online_fm_radio",
     "vendor": "hmosdemos",
     "versionCode": 1000000,
     "versionName": "1.0.0",

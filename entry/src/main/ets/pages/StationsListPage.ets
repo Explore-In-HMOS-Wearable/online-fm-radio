@@ -14,8 +14,8 @@ export function StationsListPageBuilder() {
 @Component
 export struct StationsListPage {
   @State stationVM: StationViewModel = new StationViewModel()
-  @State scale1: number = 1
-  @State opacity1: number = 1
+  private scale1: number = 1
+  private opacity1: number = 1
   pathStack: NavPathStack = new NavPathStack()
   private scroller: Scroller = new Scroller()
 
@@ -35,7 +35,7 @@ export struct StationsListPage {
                 .padding(12)
 
               List({ space: 10 }) {
-                ForEach(this.stationVM.getAllStations(), (station: StationModel, index: number) => {
+                ForEach(this.stationVM.getAllStations(), (station: StationModel) => {
                   ListItem() {
                     Row({ space: 12 }) {
                       Text(station.name)
@@ -58,7 +58,7 @@ export struct StationsListPage {
                     const param: PlayerPageParam = { stationId: String(station.id) };
                     this.pathStack.pushPathByName('PlayerPage', param)
                   })
-                })
+                },(station: StationModel) =>  String(station.id))
               }
               .width('100%')
               .edgeEffect(EdgeEffect.None)

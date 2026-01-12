@@ -5,10 +5,7 @@
 The app enables users to browse and play live internet radio stations over HTTP streaming protocols with minimal UI optimized for round screens.
 
 # Preview
-<div>
-    <img src="./screenshots/_radio.gif" width="25%"/> 
-</div>
-
+<div><img src="./screenshots/_radio.gif" width="24%"/></div>
 # Use Cases
 A user raises their HarmonyOS NEXT smartwatch, scrolls a lightweight station list, and instantly streams a favorite live internet radio station over HTTP—no phone required. The round-screen, tap-first UI makes quick station switches and volume tweaks effortless on the wrist.
 # Tech Stack
@@ -16,7 +13,7 @@ A user raises their HarmonyOS NEXT smartwatch, scrolls a lightweight station lis
 - **Languages**: ArkTS
 - **Frameworks**: HarmonyOS SDK 5.1.0(18)
 - **Tools**: DevEco Studio Vers 5.1.0.842
-- **Libraries**: @kit.ArkUI, @ohos.multimedia.media
+- **Libraries**: @kit.ArkUI, @kit.MediaKit, @kit.AudioKit
 
 # Directory Structure
 ```
